@@ -7,6 +7,12 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.21.0"
+  },
+  "resolutions": {
+    "cookie": "^0.7.2"
+  },
+  "devDependencies": {
+    "npm-force-resolutions": "0.0.3"
   }
 }
