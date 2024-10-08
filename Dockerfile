@@ -1,15 +1,24 @@
-# Use an official Node.js image
-FROM node:14
+# Use an official Node.js image for the build stage
+FROM node:14 AS builder
 
 # Create and set the working directory
 WORKDIR /app
 
-# Copy the package.json and install dependencies
+# Copy package.json and install dependencies
 COPY package.json ./
 RUN npm install
 
 # Copy the rest of the application files
 COPY . .
+
+# Use a smaller image for the production stage
+FROM node:14 AS production
+
+# Set the working directory
+WORKDIR /app
+
+# Copy only the necessary files from the build stage
+COPY --from=builder /app ./
 
 # Expose the application on port 8081
 EXPOSE 8081
