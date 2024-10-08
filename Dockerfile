@@ -1,5 +1,5 @@
 # Use an official Node.js image for the build stage
-FROM node:14 AS builder
+FROM node:20.18 AS builder
 
 # Create and set the working directory
 WORKDIR /app
@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # Use a smaller image for the production stage
-FROM node:14 AS production
+FROM node:20.18 AS production
 
 # Set the working directory
 WORKDIR /app
