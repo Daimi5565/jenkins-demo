@@ -1,6 +1,8 @@
 pipeline {
     agent any 
-
+    environment {
+        SNYK_TOKEN = credentials('your-snyk-token-id')
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -16,17 +18,15 @@ pipeline {
             steps {
                 script {
                     // Make sure to have Snyk CLI installed in your Jenkins environment
+                    sh 'snyk auth $SNYK_TOKEN'
                     sh 'snyk test --all-projects'
                 }
             }
         }
     }
-
     post {
         always {
-            // Change the artifacts path and the JUnit report path according to your project structure
             archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
-            // Make sure you have generated test reports, or this will fail
             junit '**/target/surefire-reports/*.xml'
         }
     }
