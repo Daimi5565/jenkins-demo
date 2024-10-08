@@ -6,6 +6,7 @@ app.get('/', (req, res) => {
   res.send('Hello, Jenkins! Running on port 8081');
 });
 
-app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
+// Change this line:
+app.listen(port, '0.0.0.0', () => {
+  console.log(`App listening at http://0.0.0.0:${port}`);
 });
