@@ -9,7 +9,6 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Specify the node label
                     node('your-node-label') {
                         sh 'docker build -t jenkins-demo:latest .'
                     }
@@ -20,8 +19,10 @@ pipeline {
             steps {
                 script {
                     node('your-node-label') {
-                        // Make sure to have Snyk CLI installed in your Jenkins environment
-                        sh 'snyk test --all-projects'
+                        // Use the stored Snyk API token
+                        withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]) {
+                            sh "snyk test --all-projects --auth=${SNYK_TOKEN}"
+                        }
                     }
                 }
             }
