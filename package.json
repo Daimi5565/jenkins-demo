@@ -1,18 +1,11 @@
 {
-  "name": "jenkins-demo",
+  "name": "demo-app",
   "version": "1.0.0",
-  "description": "Demo Node.js app for Jenkins",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.21.0"
-  },
-  "resolutions": {
-    "cookie": "^0.7.2"
-  },
-  "devDependencies": {
-    "npm-force-resolutions": "0.0.3"
+    "express": "^4.18.2"
   }
 }

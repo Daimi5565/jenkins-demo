@@ -1,30 +1,25 @@
 pipeline {
     agent any
 
-    environment {
-        SNYK_TOKEN = credentials('snyk-api-token') // Reference to Snyk API token stored in Jenkins credentials
-    }
-
     stages {
         stage('Clone Repository') {
             steps {
-                // Cloning the repository from GitHub
-                git url: 'https://github.com/Daimi5565/jenkins-demo.git', branch: 'main'
+                git 'git@github.com:Daimi5565/jenkins-demo.git'
             }
         }
 
-        stage('Security Scan') {
+        stage('Run Snyk Test') {
             steps {
-                // Running Snyk to scan for vulnerabilities
-                sh 'snyk test --docker saad5565/jenkins-demo:latest --file=Dockerfile'
+                script {
+                    // Run Snyk test command
+                    sh 'snyk test --all-projects'
+                }
             }
         }
     }
-
     post {
         always {
-            // Cleanup or notifications can be added here
-            cleanWs()  // Cleans up the workspace after the job is done
+            archiveArtifacts artifacts: '**/snyk-report.json', fingerprint: true
         }
     }
 }

@@ -1,26 +1,17 @@
-# Use an official Node.js image for the build stage
+# Use the official Node.js image as the base
 FROM node:22.8.0-bookworm-slim AS builder
-
-# Create and set the working directory
-WORKDIR /app
-
-# Copy package.json and install dependencies
-COPY package.json ./
-RUN npm install
-
-# Copy the rest of the application files
-COPY . .
-
-# Use a smaller image for the production stage
-FROM node:22.8.0-bookworm-slim AS production
 
 # Set the working directory
 WORKDIR /app
 
-# Copy only the necessary files from the build stage
-COPY --from=builder /app ./
+# Copy package.json and install dependencies
+COPY package.json ./
+RUN npm install --production
 
-# Expose the application on port 8081
+# Copy the application code
+COPY server.js ./
+
+# Expose the port the app runs on
 EXPOSE 8081
 
 # Start the application
