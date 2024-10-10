@@ -1,39 +1,30 @@
 pipeline {
-    agent any 
+    agent any
+
+    environment {
+        SNYK_TOKEN = credentials('snyk-api-token') // Reference to Snyk API token stored in Jenkins credentials
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                checkout scm
+                // Cloning the repository from GitHub
+                git url: 'https://github.com/Daimi5565/jenkins-demo.git', branch: 'main'
             }
         }
-        stage('Build') {
+
+        stage('Security Scan') {
             steps {
-                script {
-                    node('your-node-label') {
-                        sh 'docker build -t jenkins-demo:latest .'
-                    }
-                }
-            }
-        }
-        stage('Snyk Scan') {
-            steps {
-                script {
-                    node('your-node-label') {
-                        // Use the stored Snyk API token
-                        withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]) {
-                            sh "snyk test --all-projects --auth=${SNYK_TOKEN}"
-                        }
-                    }
-                }
+                // Running Snyk to scan for vulnerabilities
+                sh 'snyk test --docker saad5565/jenkins-demo:latest --file=Dockerfile'
             }
         }
     }
+
     post {
         always {
-            node('your-node-label') {
-                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
-                junit '**/target/surefire-reports/*.xml'
-            }
+            // Cleanup or notifications can be added here
+            cleanWs()  // Cleans up the workspace after the job is done
         }
     }
 }
