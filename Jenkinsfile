@@ -2,24 +2,27 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
                 git 'git@github.com:Daimi5565/jenkins-demo.git'
             }
         }
 
-        stage('Run Snyk Test') {
+        stage('Snyk Scan') {
             steps {
                 script {
-                    // Run Snyk test command
-                    sh 'snyk test --all-projects'
+                    // Running Snyk scan
+                    def snykCommand = "snyk test --all-projects"
+                    sh snykCommand
                 }
             }
         }
     }
+
     post {
         always {
-            archiveArtifacts artifacts: '**/snyk-report.json', fingerprint: true
+            // Archive the results or do any cleanup here
+            echo 'Pipeline completed.'
         }
     }
 }
